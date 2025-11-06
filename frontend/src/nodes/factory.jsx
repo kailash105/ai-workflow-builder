@@ -1,12 +1,10 @@
 import React from "react";
-import NodeShell from "./NodeShell";
+import { NodeShell } from "./NodeShell";
 
-export function buildNode(config) {
-  const {title, icon, inputs=[], outputs=[], render=()=>null, footer=null, className=""} = config;
+export function buildNode({ title, inputs = [], outputs = [], render }) {
   return function GenericNode(props) {
     return (
-      <NodeShell title={title} icon={icon} inputs={inputs} outputs={outputs}
-        footer={footer ? footer(props):null} className={className}>
+      <NodeShell title={title} inputs={inputs} outputs={outputs}>
         {render(props)}
       </NodeShell>
     );

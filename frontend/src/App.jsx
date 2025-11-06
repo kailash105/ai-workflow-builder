@@ -20,7 +20,6 @@ import {
 } from "./nodes/custom/index.jsx";
 import { submitPipeline } from "./submit";
 
-// ✅ Moved outside the component
 const nodeTypes = {
   text: TextNode,
   promptTemplate: PromptTemplateNode,
@@ -31,9 +30,24 @@ const nodeTypes = {
 };
 
 const initialNodes = [
-  { id: "1", type: "text", position: { x: 150, y: 100 }, data: { value: "Hello {{name}}" } },
-  { id: "2", type: "promptTemplate", position: { x: 520, y: 100 }, data: { template: "Greet {{name}}" } },
-  { id: "3", type: "joinText", position: { x: 520, y: 260 }, data: { sep: " - " } },
+  {
+    id: "1",
+    type: "text",
+    position: { x: 150, y: 120 },
+    data: { text: "Hello {{name}}" },
+  },
+  {
+    id: "2",
+    type: "promptTemplate",
+    position: { x: 520, y: 120 },
+    data: { template: "Greet {{name}}" },
+  },
+  {
+    id: "3",
+    type: "joinText",
+    position: { x: 520, y: 280 },
+    data: { sep: "-" },
+  },
 ];
 
 export default function App() {
@@ -41,7 +55,11 @@ export default function App() {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const onChange = useMemo(() => withNodeDataUpdater(setNodes), [setNodes]);
-  const nodesWithChange = nodes.map((n) => ({ ...n, data: { ...(n.data ?? {}), onChange } }));
+  const nodesWithChange = nodes.map((n) => ({
+    ...n,
+    data: { ...(n.data ?? {}), onChange },
+  }));
+
   const onConnect = (params) => setEdges((eds) => addEdge(params, eds));
 
   const handleSubmit = async () => {
@@ -54,13 +72,18 @@ export default function App() {
 
   return (
     <div className="app-shell">
-      <header className="app-header">
-        <span>VectorShift — Frontend Assessment</span>
-        <div style={{ marginLeft: "auto" }}>
-          <button className="vs-btn" onClick={handleSubmit}>
-            Submit Pipeline
-          </button>
+      <header className="app-header glassy">
+        <div className="brand">
+          <img
+            src="/vite.svg"
+            alt="logo"
+            className="logo"
+          />
+          <span>VectorShift — Frontend Assessment</span>
         </div>
+        <button className="vs-btn" onClick={handleSubmit}>
+          Submit Pipeline
+        </button>
       </header>
 
       <main className="app-main">
@@ -70,11 +93,19 @@ export default function App() {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
-          nodeTypes={nodeTypes}  // ✅ stable reference
+          nodeTypes={nodeTypes}
           fitView
         >
-          <Background />
-          <MiniMap />
+          <Background
+            variant="dots"
+            gap={18}
+            size={1.2}
+            color="#d1d5db"
+          />
+          <MiniMap
+            nodeColor={() => "#2563eb"}
+            maskColor="rgba(37,99,235,0.1)"
+          />
           <Controls />
         </ReactFlow>
       </main>
